@@ -2,13 +2,28 @@ import React, { useState } from 'react';
 
 const Calc = () => {
     const [value, setValue] = useState('');
+
     const handleButtonClick = (e) => {
         const val = e.target.value;
+
         if (val === 'C') {
             setValue('');
         } else if (val === '=') {
             try {
-                setValue(eval(value).toString());
+                // Prevent evaluation of incomplete expressions
+                if (/[\+\-\*\/]$/.test(value) || value === '') {
+                    setValue('Error');
+                } else {
+                    // Handle division by zero
+                    const result = eval(value);
+                    if (result === Infinity) {
+                        setValue('Infinity');
+                    } else if (isNaN(result)) {
+                        setValue('NaN');
+                    } else {
+                        setValue(result.toString());
+                    }
+                }
             } catch {
                 setValue('Error');
             }
