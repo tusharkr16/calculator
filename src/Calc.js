@@ -28,7 +28,12 @@ const Calc = () => {
                 setValue('Error');
             }
         } else {
-            setValue(value + val);
+            // Prevent multiple operators in a row
+            if (/[\+\-\*\/]$/.test(value) && /[\+\-\*\/]/.test(val)) {
+                setValue('Error');
+            } else {
+                setValue(value + val);
+            }
         }
     };
 
