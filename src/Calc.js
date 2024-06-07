@@ -2,37 +2,40 @@ import React, { useState } from 'react';
 
 const Calc = () => {
     const [value, setValue] = useState('');
+    const [result, setResult] = useState('');
 
     const handleButtonClick = (e) => {
         const val = e.target.value;
 
         if (val === 'C') {
             setValue('');
+            setResult('');
         } else if (val === '=') {
             try {
                 // Prevent evaluation of incomplete expressions
                 if (/[\+\-\*\/]$/.test(value) || value === '') {
-                    setValue('Error');
+                    setResult('Error');
                 } else {
                     // Handle division by zero
                     const result = eval(value);
                     if (result === Infinity) {
-                        setValue('Infinity');
+                        setResult('Infinity');
                     } else if (isNaN(result)) {
-                        setValue('NaN');
+                        setResult('NaN');
                     } else {
-                        setValue(result.toString());
+                        setResult(result.toString());
                     }
                 }
             } catch {
-                setValue('Error');
+                setResult('Error');
             }
         } else {
             // Prevent multiple operators in a row
             if (/[\+\-\*\/]$/.test(value) && /[\+\-\*\/]/.test(val)) {
-                setValue('Error');
+                setResult('Error');
             } else {
                 setValue(value + val);
+                setResult(''); // Clear result when new input is added
             }
         }
     };
@@ -41,6 +44,7 @@ const Calc = () => {
         <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
             <h1>React Calculator</h1>
             <input type="text" style={{ width: "20%", marginBottom: "10px" }} value={value} readOnly />
+            <p>{result}</p>
             <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
                 <button style={buttonStyle} value={7} onClick={handleButtonClick}>7</button>
                 <button style={buttonStyle} value={8} onClick={handleButtonClick}>8</button>
